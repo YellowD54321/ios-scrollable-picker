@@ -1,0 +1,44 @@
+.scrollable-picker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(155, 155, 155, 0.5);
+
+    &.non-display {
+        display: none;
+    }
+
+    .l-container {
+        width: 50%;
+        height: 50%;
+        background-color: white;
+    }
+
+    .l-picker-content {
+        height: 100%;
+        background-color: rgba(155, 155, 155, 0.5);
+
+        .l-view {
+            height: 3rem;
+            background-color: gray;
+            // overflow-y: auto;
+            scroll-snap-type: y mandatory;
+
+            .o-item {
+                height: 100%;
+                // display: flex;
+                // align-items: center;
+                // justify-content: center;
+                margin: 0;
+                scroll-snap-align: center;
+            }
+        }
+    }
+}
+

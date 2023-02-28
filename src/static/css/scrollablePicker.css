@@ -1,0 +1,36 @@
+.scrollable-picker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(155, 155, 155, 0.5);
+}
+.scrollable-picker.non-display {
+  display: none;
+}
+.scrollable-picker .l-container {
+  width: 50%;
+  height: 50%;
+  background-color: white;
+}
+.scrollable-picker .l-picker-content {
+  height: 100%;
+  background-color: rgba(155, 155, 155, 0.5);
+}
+.scrollable-picker .l-picker-content .l-view {
+  height: 3rem;
+  background-color: gray;
+  scroll-snap-type: y mandatory;
+}
+.scrollable-picker .l-picker-content .l-view .o-item {
+  height: 100%;
+  margin: 0;
+  scroll-snap-align: center;
+}
+
+/*# sourceMappingURL=scrollablePicker.css.map */
