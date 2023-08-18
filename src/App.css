@@ -17,7 +17,8 @@
   position: relative;
   width: 100%;
   height: var(--picker-height);
-  background-color: rgb(92, 74, 74);
+  /* background-color: rgb(92, 74, 74); */
+  background-color: black;
   color: rgb(255, 255, 255);
   overflow: none;
 }
@@ -39,7 +40,19 @@
   margin: 0;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  border: 1px solid red;
+  cursor: grab;
+  /* hide scroll bar for firefox */
+  scrollbar-width: none;
+}
+
+/* hide scroll bar for other browser */
+.picker ul::-webkit-scrollbar {
+  display: none;
+}
+
+
+.picker ul:active {
+  cursor: grabbing;
 }
 
 .picker ul::before,
@@ -52,28 +65,27 @@
 
 .picker li {
   scroll-snap-align: center;
-  margin: .5rem 0;
+  margin: 1rem 0;
+  font-size: 1rem;
 }
 
-
-.upper-region {
-  backdrop-filter: brightness(30%);
+.upper-region,
+.lower-region {
+  backdrop-filter: brightness(50%);
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: calc((var(--picker-height) - var(--selected-region-height)) / 2);
   pointer-events: none;
+}
+
+.upper-region {
+  top: 0;
+  left: 0;
 }
 
 .lower-region {
-  backdrop-filter: brightness(40%);
-  position: absolute;
   top: calc(50% + var(--selected-region-height) / 2);
   left: 0;
-  width: 100%;
-  height: calc((var(--picker-height) - var(--selected-region-height)) / 2);
-  pointer-events: none;
 }
 
 .selected-region {
@@ -84,4 +96,6 @@
   width: 100%;
   height: var(--selected-region-height);
   pointer-events: none;
+  border-top: 1px white solid;
+  border-bottom: 1px white solid;
 }
