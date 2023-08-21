@@ -3,16 +3,13 @@ import Picker from "./components/picker/Picker";
 import PickerSelect from "./components/pickerSelect/PickerSelect";
 import { useState } from "react";
 
-const testList = new Array(100).fill("").map((_, index) => `${index}`);
+const testList = new Array(100).fill("").map((_, index) => `${index + 2}`);
 const testListSecond = {};
 for (const testItem of testList) {
   testListSecond[testItem] = new Array(100)
     .fill("")
     .map((_, index) => `${testItem}-${index}`);
 }
-
-console.log("testList", testList);
-console.log("testListSecond", testListSecond);
 
 function App() {
   const [firstValue, setFirstValue] = useState(testList[0]);
@@ -38,13 +35,15 @@ function App() {
           onChange={handleChangeFirstSelect}
           name="first-value"
           datas={testList}
+          defaultValue={testList[5]}
         />
-        <PickerSelect
+        {/* <PickerSelect
           value={secondValue}
           onChange={handleChangeSecondSelect}
           name="seconde-value"
           datas={testListSecond[firstValue]}
-        />
+          defaultValue={testListSecond[firstValue][4]}
+        /> */}
       </Picker>
     </div>
   );

@@ -31,9 +31,9 @@ const Picker = ({ children }) => {
   return (
     <div className="picker" ref={pickerRef}>
       <div className="selects">{children}</div>
-      <div className="upper-region"></div>
+      {/* <div className="upper-region"></div> */}
       <div className="selected-region"></div>
-      <div className="lower-region"></div>
+      {/* <div className="lower-region"></div> */}
     </div>
   );
 };

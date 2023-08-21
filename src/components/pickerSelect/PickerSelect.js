@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { pickerContext } from "../picker/Picker";
 
 const PICKER_HEIGHT = 10 * 16;
 const SELECT_REGION_HEIGHT = 2 * 16;
 const OPTION_MARGIN_TOP = 1 * 16;
 
-const PickerSelect = ({ value, onChange, name, datas }) => {
+const PickerSelect = ({ value, onChange, name, datas, defaultValue }) => {
   const { picker } = useContext(pickerContext);
+  const [localDatas, setLocalDatas] = useState(datas);
   const selectRef = useRef();
   const optionRefs = useRef([]);
   const grab = useRef({
@@ -34,6 +35,8 @@ const PickerSelect = ({ value, onChange, name, datas }) => {
     if (!picker) {
       return;
     }
+    setLocalDatas(datas);
+
     const pickerHeight = PICKER_HEIGHT;
     const selectRegionHeight = SELECT_REGION_HEIGHT;
     const INACCURACY_PIXEL = 5;
@@ -54,13 +57,13 @@ const PickerSelect = ({ value, onChange, name, datas }) => {
       targets.push(targetElement);
     }
     optionRefs.current = targets;
-    scrollToTop();
+    scrollToTarget();
     handleScroll();
   }, [picker, datas]);
 
   const observerCallback = (entries) => {
-    if (entries?.length > 1) {
-      onChange(datas[0] || "");
+    if (entries?.length >= datas?.length) {
+      onChange(defaultValue || datas[0] || "");
       return;
     }
     for (const entry of entries) {
@@ -113,7 +116,7 @@ const PickerSelect = ({ value, onChange, name, datas }) => {
     for (const option of options) {
       const optionHeight = option.offsetHeight;
       const selectRetionTopY = scrollTop;
-      const selectRegionBottomY = scrollTop + SELECT_REGION_HEIGHT;
+      const selectRegionBottomY = selectRetionTopY + SELECT_REGION_HEIGHT;
       const optionOffsetTop = option.offsetTop;
       const INACCURACY_PIXEL = SELECT_REGION_HEIGHT / 2;
       const optionTop =
@@ -125,18 +128,18 @@ const PickerSelect = ({ value, onChange, name, datas }) => {
       if (optionTop < selectRetionTopY) {
         const topRegionHeight = (selectHeight - SELECT_REGION_HEIGHT) / 2;
         const ratio = (selectRetionTopY - optionTop) / topRegionHeight;
-        option.style.opacity = 1 - ratio;
+        option.style.opacity = (1 - ratio) * 0.5;
       } else if (optionTop > selectRegionBottomY) {
         const bottomRegionHeight = (selectHeight - SELECT_REGION_HEIGHT) / 2;
         const ratio = (optionTop - selectRegionBottomY) / bottomRegionHeight;
-        option.style.opacity = 1 - ratio;
+        option.style.opacity = (1 - ratio) * 0.5;
       } else {
         option.style.opacity = 1;
       }
     }
   };
 
-  const scrollTo = (y, isSmooth) => {
+  const scrollToY = (y, isSmooth = false) => {
     if (!selectRef.current) {
       return;
     }
@@ -150,13 +153,34 @@ const PickerSelect = ({ value, onChange, name, datas }) => {
   };
 
   const scrollToTop = () => {
-    scrollTo(0);
+    scrollToY(0);
+  };
+
+  const scrollToTarget = () => {
+    if (
+      !defaultValue ||
+      !optionRefs.current ||
+      optionRefs.current.length <= 0
+    ) {
+      scrollToTop();
+      return;
+    }
+    const targetElement = optionRefs.current.find(
+      (option) => option.textContent === defaultValue
+    );
+    if (!targetElement) {
+      scrollToTop();
+      return;
+    }
+    targetElement.scrollIntoView({
+      block: "center",
+    });
   };
 
   const handleClickOption = (e) => {
     const offsetTop = e.target.offsetTop;
     const y = offsetTop - SELECT_REGION_HEIGHT * 2;
-    scrollTo(y, true);
+    scrollToY(y, true);
   };
 
   const options = !datas ? [""] : !Array.isArray(datas) ? [datas] : datas;
