@@ -37,13 +37,13 @@ function App() {
           datas={testList}
           defaultValue={testList[5]}
         />
-        {/* <PickerSelect
+        <PickerSelect
           value={secondValue}
           onChange={handleChangeSecondSelect}
           name="seconde-value"
           datas={testListSecond[firstValue]}
           defaultValue={testListSecond[firstValue][4]}
-        /> */}
+        />
       </Picker>
     </div>
   );
