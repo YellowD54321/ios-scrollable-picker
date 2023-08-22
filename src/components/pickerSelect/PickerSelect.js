@@ -68,10 +68,13 @@ const PickerSelect = ({ value, onChange, name, datas, defaultValue }) => {
     if (entries?.length >= datas?.length) {
       // will get the entire data list when the very beginning
       // set value to default value or first item.
-      onChange(defaultValue || datas[0] || "");
+      onChange(defaultValue || datas?.[0] || datas || "");
       return;
     }
     for (const entry of entries) {
+      if (!entry.isIntersecting) {
+        continue;
+      }
       const list = optionRefs.current;
       const target = list.find((option) => option === entry.target);
       if (!target) {
@@ -102,10 +105,20 @@ const PickerSelect = ({ value, onChange, name, datas, defaultValue }) => {
    * @param {number} distance first distance is distance of grabbing. Then decrease whenever function is called.
    */
   const grabSliding = (distance) => {
-    distance *= 0.9;
+    distance *= 0.5;
     const selectElement = selectRef.current;
+    if (!selectElement) {
+      window.cancelAnimationFrame(grabSliderId.current);
+      grab.current = getInitialGrab();
+      return;
+    }
     selectElement.scrollTop -= distance;
-    if (Math.abs(distance) > 1) {
+    if (
+      Math.abs(distance) > 1 &&
+      selectElement.scrollTop > 0 &&
+      selectElement.scrollTop <
+        selectElement.scrollHeight - selectElement.offsetHeight
+    ) {
       // if distance is still exists, run it again.
       grabSliderId.current = window.requestAnimationFrame(() =>
         grabSliding(distance)
@@ -247,6 +260,13 @@ const PickerSelect = ({ value, onChange, name, datas, defaultValue }) => {
   };
 
   const handleClickOption = (e) => {
+    const CLICK_RANGE = 10;
+    if (
+      grab.current.startY &&
+      Math.abs(grab.current.startY - e.pageY) >= CLICK_RANGE
+    ) {
+      return;
+    }
     const offsetTop = e.target.offsetTop;
     const y = offsetTop - SELECT_REGION_HEIGHT * 2;
     scrollToY(y);
