@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { pickerContext } from "../picker/Picker";
 
-const PICKER_HEIGHT = 10 * 16;
-const SELECT_REGION_HEIGHT = 2 * 16;
-const OPTION_MARGIN_TOP = 1 * 16;
+const PICKER_HEIGHT = 15 * 16;
+const SELECT_REGION_HEIGHT = 4 * 16;
+const OPTION_MARGIN_TOP = SELECT_REGION_HEIGHT / 2;
+const FONT_HEIGHT = 1 * 16;
 
 const GRAB_SLIDE_MS = 100;
 const GRAB_RECORD_NUMBER = 10;
@@ -181,22 +182,17 @@ const PickerSelect = ({ value, onChange, name, datas, defaultValue }) => {
     const selectHeight = selectElement.offsetHeight;
     const scrollTop = selectElement.scrollTop;
     for (const option of options) {
-      const optionHeight = option.offsetHeight;
+      const optionHeight = option.offsetHeight + OPTION_MARGIN_TOP * 2;
       const selectRetionTopY = scrollTop;
       const selectRegionBottomY = selectRetionTopY + SELECT_REGION_HEIGHT;
       const optionOffsetTop = option.offsetTop;
-      const INACCURACY_PIXEL = SELECT_REGION_HEIGHT / 2;
-      const optionTop =
-        optionOffsetTop -
-        optionHeight -
-        OPTION_MARGIN_TOP * 3 +
-        INACCURACY_PIXEL;
+      const optionTop = optionOffsetTop - optionHeight;
 
-      if (optionTop < selectRetionTopY) {
+      if (optionTop + FONT_HEIGHT < selectRetionTopY) {
         const topRegionHeight = (selectHeight - SELECT_REGION_HEIGHT) / 2;
         const ratio = (selectRetionTopY - optionTop) / topRegionHeight;
         option.style.opacity = (1 - ratio) * 0.5;
-      } else if (optionTop > selectRegionBottomY) {
+      } else if (optionTop + FONT_HEIGHT > selectRegionBottomY) {
         const bottomRegionHeight = (selectHeight - SELECT_REGION_HEIGHT) / 2;
         const ratio = (optionTop - selectRegionBottomY) / bottomRegionHeight;
         option.style.opacity = (1 - ratio) * 0.5;

@@ -1,6 +1,6 @@
 :root {
-  --picker-height: 10rem;
-  --selected-region-height: 2rem;
+  --picker-height: 15rem;
+  --selected-region-height: 4rem;
 }
 
 .App {
@@ -65,8 +65,9 @@
 
 .picker li {
   scroll-snap-align: center;
-  margin: 1rem 0;
-  font-size: 1rem;
+  margin: calc(var(--selected-region-height) / 2) 0;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
 .upper-region,
